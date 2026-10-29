@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pharmacy Portal | Unified Health ID</title>
+<style>
+:root{--teal:#197e78;--dark:#115f5b;--mint:#eaf6f4;--border:#d7e4e0;--text:#293f43}
+*{box-sizing:border-box}
+body{margin:0;background:#f4f8f7;color:var(--text);font-family:Arial,sans-serif}
+header,nav{background:white;padding:18px 6%;border-bottom:1px solid var(--border)}
+header h2{margin:0;color:var(--teal)}
+nav{display:flex;gap:18px;flex-wrap:wrap}
+nav a{color:var(--text);text-decoration:none;font-weight:bold;font-size:14px}
+main{max-width:1000px;margin:28px auto;padding:0 15px 35px}
+.card{background:white;padding:23px;border:1px solid var(--border);border-radius:12px;margin-bottom:22px}
+h1{font-size:28px;margin:0 0 10px}
+h2{color:var(--teal);font-size:22px}
+label{display:block;font-weight:bold;font-size:14px;margin:15px 0 7px}
+input{width:100%;padding:12px;border:1px solid #cbdad7;border-radius:7px;font:inherit}
+button{padding:12px 17px;border:0;border-radius:7px;background:var(--teal);color:white;font-weight:bold;cursor:pointer;margin-top:15px}
+button:hover{background:var(--dark)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.hidden{display:none!important}
+.message{font-size:14px;color:#b42318}
+.info{background:var(--mint);padding:16px;border-radius:9px;line-height:1.9;overflow-wrap:anywhere}
+.rx{border:1px solid var(--border);border-radius:10px;padding:17px;margin:15px 0}
+.rx h3{color:var(--teal)}
+.table-wrap{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;min-width:650px}
+th,td{border:1px solid var(--border);padding:11px;text-align:left;vertical-align:top}
+th{background:var(--mint)}
+.empty{color:#718184}
+@media(max-width:600px){.card{padding:17px}.grid{grid-template-columns:1fr}h1{font-size:24px}}
+</style>
+</head>
+<body>
+<header><h2>✚ Unified Health ID</h2></header>
+<nav>
+<a href="./index.html">Home</a>
+<a href="./register.html">Register Patient</a>
+<a href="./patient.html">Patient</a>
+<a href="./doctor.html">Doctor</a>
+<a href="./lab-center.html">Lab Center</a>
+</nav>
+
+<main>
+<section class="card" id="loginSection">
+<h1>Pharmacy Login</h1>
+<p>Enter the pharmacy ID to access patient prescriptions.</p>
+<form id="loginForm">
+<label for="pharmacyId">Pharmacy ID</label>
+<input id="pharmacyId" type="password" placeholder="Enter pharmacy ID" required>
+<button type="submit">Login</button>
+<p id="loginMessage" class="message"></p>
+</form>
+<p>Demo ID: <strong>PHARM001</strong></p>
+</section>
+
+<section id="portal" class="hidden">
+<section class="card">
+<h1>Pharmacy Portal</h1>
+<p>Search for a registered patient to view their prescriptions.</p>
+<form id="searchForm">
+<label for="patientId">Patient Health ID</label>
+<div class="grid">
+<input id="patientId" placeholder="e.g. 10006" required>
+<button type="submit">Search Patient</button>
+</div>
+</form>
+<p id="searchMessage" class="message"></p>
+</section>
+
+<section id="patientSection" class="card hidden">
+<h2>Patient Details</h2>
+<div class="info" id="patientDetails"></div>
+</section>
+
+<section id="prescriptionSection" class="card hidden">
+<h2>Digital Prescriptions</h2>
+<div id="prescriptionList"></div>
+</section>
+
+<button type="button" id="logoutButton">Logout</button>
+</section>
+</main>
+
+<script src="./data.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+
+function escapeHTML(value){
+ return String(value ?? "").replace(/[&<>"']/g,c=>({
+ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ })[c]);
+}
+
+function loadDatabase(){
+ if(typeof loadDB!=="function") throw new Error("loadDB() not found. Check data.js.");
+ return loadDB();
+}
+
+function findPatient(db,id){
+ const patients=db.patients||{};
+ if(Array.isArray(patients)) return patients.find(p=>String(p.id)===String(id));
+ return patients[id]||Object.values(patients).find(p=>String(p.id)===String(id));
+}
+
+$("loginForm").addEventListener("submit",function(e){
+ e.preventDefault();
+ if($("pharmacyId").value.trim()!=="PHARM001"){
+  $("loginMessage").textContent="Invalid Pharmacy ID.";
+  return;
+ }
+ $("loginSection").classList.add("hidden");
+ $("portal").classList.remove("hidden");
+ $("loginMessage").textContent="";
+});
+
+$("searchForm").addEventListener("submit",function(e){
+ e.preventDefault();
+ $("searchMessage").textContent="";
+ $("patientSection").classList.add("hidden");
+ $("prescriptionSection").classList.add("hidden");
+
+ try{
+  const db=loadDatabase();
+  const id=$("patientId").value.trim();
+  const patient=findPatient(db,id);
+
+  if(!patient){
+   $("searchMessage").textContent=
+    "Patient not found. Check the Health ID and confirm the patient was registered in this same website database.";
+   return;
+  }
+
+  $("patientDetails").innerHTML=`
+   <strong>Name:</strong> ${escapeHTML(patient.fullName||"—")}<br>
+   <strong>Health ID:</strong> ${escapeHTML(patient.id||id)}<br>
+   <strong>Age / Gender:</strong> ${escapeHTML(patient.age||"—")} / ${escapeHTML(patient.gender||"—")}<br>
+   <strong>Height:</strong> ${escapeHTML(patient.height||"—")} cm<br>
+   <strong>Weight:</strong> ${escapeHTML(patient.weight||"—")} kg<br>
+   <strong>Blood Group:</strong> ${escapeHTML(patient.bloodGroup||"—")}<br>
+   <strong>Phone:</strong> ${escapeHTML(patient.phone||"—")}<br>
+   <strong>Disability:</strong> ${escapeHTML(patient.disability||"—")}<br>
+   <strong>Known Allergies:</strong> ${escapeHTML(patient.allergies||"—")}`;
+
+  renderPrescriptions(patient);
+  $("patientSection").classList.remove("hidden");
+  $("prescriptionSection").classList.remove("hidden");
+
+ }catch(error){
+  $("searchMessage").textContent="Unable to load patient: "+error.message;
+ }
+});
+
+function renderPrescriptions(patient){
+ const list=$("prescriptionList");
+ const prescriptions=Array.isArray(patient.prescriptions)?patient.prescriptions:[];
+
+ if(!prescriptions.length){
+  list.innerHTML='<p class="empty">No prescriptions available for this patient yet.</p>';
+  return;
+ }
+
+ list.innerHTML=prescriptions.map((p,index)=>{
+  const medicines=Array.isArray(p.medicines)?p.medicines:[];
+
+  const rows=medicines.map((m,i)=>{
+   if(typeof m==="string"){
+    return `<tr><td>${i+1}</td><td>${escapeHTML(m)}</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>`;
+   }
+   return `<tr>
+    <td>${i+1}</td>
+    <td>${escapeHTML(m.name||"—")}</td>
+    <td>${escapeHTML(m.foodTiming||"—")}</td>
+    <td>${escapeHTML(m.dosage||"—")}</td>
+    <td>${escapeHTML(m.dosageRange||"—")}</td>
+    <td>${escapeHTML(m.duration||"—")}</td>
+   </tr>`;
+  }).join("");
+
+  return `<article class="rx">
+   <h3>Prescription ${index+1}</h3>
+   <p><strong>Date:</strong> ${escapeHTML(p.date||"—")}</p>
+   <p><strong>Diagnosis:</strong> ${escapeHTML(p.diagnosis||"—")}</p>
+   <div class="table-wrap">
+    <table>
+     <thead><tr>
+      <th>S. No.</th><th>Medicine Name</th><th>Before / After Food</th>
+      <th>Dosage</th><th>Dosage Range</th><th>Duration</th>
+     </tr></thead>
+     <tbody>${rows || '<tr><td colspan="6">No medicines recorded.</td></tr>'}</tbody>
+    </table>
+   </div>
+   <p><strong>Any Lab Test:</strong> ${escapeHTML(p.anyLabTest||p.labTest||"Not specified")}</p>
+  </article>`;
+ }).join("");
+}
+
+$("logoutButton").addEventListener("click",()=>{
+ $("portal").classList.add("hidden");
+ $("loginSection").classList.remove("hidden");
+ $("loginForm").reset();
+ $("searchForm").reset();
+ $("patientSection").classList.add("hidden");
+ $("prescriptionSection").classList.add("hidden");
+ $("searchMessage").textContent="";
+ $("loginMessage").textContent="";
+});
+</script>
+</body>
+</html>

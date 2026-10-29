@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Doctor Portal | Unified Health ID</title>
+<style>
+:root{--teal:#197e78;--dark:#115f5b;--mint:#eaf6f4;--border:#d7e4e0;--text:#293f43}
+*{box-sizing:border-box}
+body{margin:0;background:#f4f8f7;color:var(--text);font-family:Arial,sans-serif}
+header,nav{background:white;padding:18px 6%;border-bottom:1px solid var(--border)}
+header h2{margin:0;color:var(--teal)}
+nav{display:flex;gap:18px;flex-wrap:wrap}
+nav a{color:var(--text);text-decoration:none;font-weight:bold;font-size:14px}
+main{max-width:1000px;margin:28px auto;padding:0 15px 35px}
+.card{background:white;padding:23px;border:1px solid var(--border);border-radius:12px;margin-bottom:22px}
+h1{font-size:28px;margin:0 0 10px}
+h2{color:var(--teal);font-size:22px}
+p{line-height:1.6}
+label{display:block;font-weight:bold;font-size:14px;margin:15px 0 7px}
+input,select,textarea{width:100%;padding:12px;border:1px solid #cbdad7;border-radius:7px;font:inherit;background:white;color:var(--text)}
+button{padding:12px 17px;border:0;border-radius:7px;background:var(--teal);color:white;font-weight:bold;cursor:pointer;margin-top:15px}
+button:hover{background:var(--dark)}
+.secondary{background:#eaf6f4;color:var(--teal)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 16px}
+.hidden{display:none!important}
+.message{font-size:14px;color:#b42318}
+.patient-info{background:var(--mint);padding:16px;border-radius:9px;line-height:1.9;overflow-wrap:anywhere}
+.medicine-card{border:1px solid var(--border);border-radius:9px;padding:16px;margin:14px 0}
+.medicine-card h3{margin:0;color:var(--teal)}
+.remove{background:#a83232}
+.table-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:650px}
+th,td{border:1px solid var(--border);padding:11px;text-align:left;vertical-align:top}
+th{background:var(--mint)}
+.rx-card{border:1px solid var(--border);border-radius:9px;padding:17px;margin:15px 0}
+.rx-card h3{color:var(--teal)}
+@media(max-width:600px){main{margin-top:18px}.card{padding:17px}.grid{grid-template-columns:1fr}h1{font-size:24px}}
+</style>
+</head>
+<body>
+<header><h2>✚ Unified Health ID</h2></header>
+<nav>
+<a href="./index.html">Home</a>
+<a href="./register.html">Register Patient</a>
+<a href="./patient.html">Patient</a>
+<a href="./pharmacy.html">Pharmacy</a>
+<a href="./lab-center.html">Lab Center</a>
+</nav>
+
+<main>
+<section class="card" id="loginSection">
+<h1>Doctor Login</h1>
+<p>Enter your doctor registration ID to continue.</p>
+<form id="loginForm">
+<label for="doctorId">Doctor Registration ID</label>
+<input id="doctorId" type="password" placeholder="Enter doctor ID" required>
+<button type="submit">Login</button>
+<p id="loginMessage" class="message"></p>
+</form>
+<p>Demo ID: <strong>MED-DOC-001</strong></p>
+</section>
+
+<section id="portal" class="hidden">
+<section class="card">
+<h1>Doctor Portal</h1>
+<p>Search for a patient using their Unified Health ID.</p>
+<form id="searchForm">
+<label for="patientId">Patient Health ID</label>
+<div class="grid">
+<input id="patientId" placeholder="e.g. 10006" required>
+<button type="submit">Search Patient</button>
+</div>
+</form>
+<p id="searchMessage" class="message"></p>
+</section>
+
+<section id="patientSection" class="card hidden">
+<h2>Patient Details</h2>
+<div class="patient-info" id="patientDetails"></div>
+</section>
+
+<section id="prescriptionSection" class="card hidden">
+<h2>Create Digital Prescription</h2>
+<form id="prescriptionForm">
+<label for="diagnosis">Diagnosis</label>
+<input id="diagnosis" placeholder="Enter diagnosis" required>
+
+<h2>Medicines</h2>
+<div id="medicineList"></div>
+<button type="button" id="addMedicine" class="secondary">+ Add Medicine</button>
+
+<label for="anyLabTest">Any Lab Test</label>
+<input id="anyLabTest" list="labTestOptions" placeholder="Enter or select a lab test">
+<datalist id="labTestOptions">
+<option value="Complete Blood Count (CBC)">
+<option value="Blood Glucose Test">
+<option value="Lipid Profile">
+<option value="Liver Function Test">
+<option value="Kidney Function Test">
+<option value="Thyroid Function Test">
+<option value="Urine Test">
+<option value="Any other lab test">
+</datalist>
+
+<button type="submit">Save Prescription</button>
+<p id="saveMessage" class="message"></p>
+</form>
+</section>
+
+<section class="card">
+<h2>Previous Prescriptions</h2>
+<div id="previousPrescriptions"><p>No patient selected.</p></div>
+</section>
+
+<button type="button" id="logoutButton" class="secondary">Logout</button>
+</section>
+</main>
+
+<script src="./data.js"></script>
+<script>
+let currentPatientId = null;
+
+function $(id){return document.getElementById(id)}
+function escapeHTML(value){
+ return String(value ?? "").replace(/[&<>"']/g,c=>({
+ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ })[c]);
+}
+function displayValue(value){return value === null || value === undefined || value === "" ? "—" : String(value)}
+function loadDatabase(){
+ if(typeof loadDB !== "function") throw new Error("loadDB() not found. Check data.js.");
+ return loadDB();
+}
+function saveDatabase(db){
+ if(typeof saveDB === "function"){saveDB(db);return;}
+ localStorage.setItem("unifiedHealthPrototype_v1",JSON.stringify(db));
+}
+function findPatient(db,id){
+ const patients=db.patients||{};
+ if(Array.isArray(patients)) return patients.find(p=>String(p.id)===String(id));
+ return patients[id]||Object.values(patients).find(p=>String(p.id)===String(id));
+}
+
+$("loginForm").addEventListener("submit",function(e){
+ e.preventDefault();
+ if($("doctorId").value.trim()!=="MED-DOC-001"){
+  $("loginMessage").textContent="Invalid doctor ID.";
+  return;
+ }
+ $("loginSection").classList.add("hidden");
+ $("portal").classList.remove("hidden");
+ $("loginMessage").textContent="";
+});
+
+function addMedicineRow(values={}){
+ const card=document.createElement("div");
+ card.className="medicine-card";
+ card.innerHTML=`
+ <h3>Medicine</h3>
+ <label>Medicine Name</label>
+ <input class="med-name" value="${escapeHTML(values.name||"")}" placeholder="Enter medicine name" required>
+ <div class="grid">
+  <div><label>Before or After Food</label>
+   <select class="med-food" required>
+    <option value="">Select timing</option>
+    <option value="Before Food">Before Food</option>
+    <option value="After Food">After Food</option>
+    <option value="With Food">With Food</option>
+    <option value="As directed">As directed</option>
+   </select>
+  </div>
+  <div><label>Dosage</label>
+   <input class="med-dosage" value="${escapeHTML(values.dosage||"")}" placeholder="As prescribed" required>
+  </div>
+ </div>
+ <div class="grid">
+  <div><label>Dosage Range</label>
+   <input class="med-range" value="${escapeHTML(values.dosageRange||"")}" placeholder="As prescribed" required>
+  </div>
+  <div><label>Duration</label>
+   <input class="med-duration" value="${escapeHTML(values.duration||"")}" placeholder="e.g. as prescribed" required>
+  </div>
+ </div>
+ <button type="button" class="remove">Remove Medicine</button>`;
+ card.querySelector(".med-food").value=values.foodTiming||"";
+ card.querySelector(".remove").addEventListener("click",()=>{
+  if($$(".medicine-card").length>1) card.remove();
+  else alert("At least one medicine row is required.");
+ });
+ $("medicineList").appendChild(card);
+}
+function $$(selector){return document.querySelectorAll(selector)}
+addMedicineRow();
+$("addMedicine").addEventListener("click",()=>addMedicineRow());
+
+$("searchForm").addEventListener("submit",function(e){
+ e.preventDefault();
+ $("searchMessage").textContent="";
+ $("patientSection").classList.add("hidden");
+ $("prescriptionSection").classList.add("hidden");
+ try{
+  const db=loadDatabase();
+  const id=$("patientId").value.trim();
+  const patient=findPatient(db,id);
+  if(!patient){$("searchMessage").textContent="Patient not found. Check the Health ID.";return;}
+  currentPatientId=String(patient.id||id);
+  $("patientDetails").innerHTML=`
+   <strong>Name:</strong> ${escapeHTML(displayValue(patient.fullName))}<br>
+   <strong>Health ID:</strong> ${escapeHTML(currentPatientId)}<br>
+   <strong>Age / Gender:</strong> ${escapeHTML(displayValue(patient.age))} / ${escapeHTML(displayValue(patient.gender))}<br>
+   <strong>Height:</strong> ${escapeHTML(displayValue(patient.height))} cm<br>
+   <strong>Weight:</strong> ${escapeHTML(displayValue(patient.weight))} kg<br>
+   <strong>Blood Group:</strong> ${escapeHTML(displayValue(patient.bloodGroup))}<br>
+   <strong>Phone:</strong> ${escapeHTML(displayValue(patient.phone))}<br>
+   <strong>Disability:</strong> ${escapeHTML(displayValue(patient.disability))}<br>
+   <strong>Allergies:</strong> ${escapeHTML(displayValue(patient.allergies))}`;
+  $("patientSection").classList.remove("hidden");
+  $("prescriptionSection").classList.remove("hidden");
+  renderPreviousPrescriptions(patient);
+ }catch(error){
+  $("searchMessage").textContent="Could not load patient: "+error.message;
+ }
+});
+
+$("prescriptionForm").addEventListener("submit",function(e){
+ e.preventDefault();
+ if(!currentPatientId){$("saveMessage").textContent="Search for a patient first.";return;}
+ try{
+  const db=loadDatabase();
+  const patient=findPatient(db,currentPatientId);
+  if(!patient){$("saveMessage").textContent="Patient no longer exists. Search again.";return;}
+
+  const medicines=Array.from($$(".medicine-card")).map(card=>({
+   name:card.querySelector(".med-name").value.trim(),
+   foodTiming:card.querySelector(".med-food").value,
+   dosage:card.querySelector(".med-dosage").value.trim(),
+   dosageRange:card.querySelector(".med-range").value.trim(),
+   duration:card.querySelector(".med-duration").value.trim()
+  }));
+
+  patient.prescriptions=Array.isArray(patient.prescriptions)?patient.prescriptions:[];
+  patient.prescriptions.push({
+   date:new Date().toISOString().slice(0,10),
+   diagnosis:$("diagnosis").value.trim(),
+   medicines:medicines,
+   anyLabTest:$("anyLabTest").value.trim()
+  });
+
+  saveDatabase(db);
+  $("saveMessage").style.color="#147e4b";
+  $("saveMessage").textContent="Prescription saved successfully.";
+  renderPreviousPrescriptions(patient);
+
+  $("diagnosis").value="";
+  $("anyLabTest").value="";
+  $("medicineList").innerHTML="";
+  addMedicineRow();
+ }catch(error){
+  $("saveMessage").style.color="#b42318";
+  $("saveMessage").textContent="Could not save prescription: "+error.message;
+ }
+});
+
+function renderPreviousPrescriptions(patient){
+ const prescriptions=Array.isArray(patient.prescriptions)?patient.prescriptions:[];
+ if(!prescriptions.length){
+  $("previousPrescriptions").innerHTML="<p>No prescriptions available.</p>";
+  return;
+ }
+ $("previousPrescriptions").innerHTML=prescriptions.slice().reverse().map((p,index)=>{
+  const meds=Array.isArray(p.medicines)?p.medicines:[];
+  return `<article class="rx-card">
+   <h3>Prescription ${prescriptions.length-index}</h3>
+   <p><strong>Date:</strong> ${escapeHTML(p.date||"—")}</p>
+   <p><strong>Diagnosis:</strong> ${escapeHTML(p.diagnosis||"—")}</p>
+   <div class="table-wrap"><table>
+    <thead><tr><th>#</th><th>Medicine</th><th>Before/After Food</th><th>Dosage</th><th>Dosage Range</th><th>Duration</th></tr></thead>
+    <tbody>${meds.map((m,i)=>typeof m==="string"
+     ? `<tr><td>${i+1}</td><td>${escapeHTML(m)}</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>`
+     : `<tr><td>${i+1}</td><td>${escapeHTML(m.name||"—")}</td><td>${escapeHTML(m.foodTiming||"—")}</td><td>${escapeHTML(m.dosage||"—")}</td><td>${escapeHTML(m.dosageRange||"—")}</td><td>${escapeHTML(m.duration||"—")}</td></tr>`
+    ).join("")}</tbody>
+   </table></div>
+   <p><strong>Any Lab Test:</strong> ${escapeHTML(p.anyLabTest||p.labTest||"Not specified")}</p>
+  </article>`;
+ }).join("");
+}
+
+$("logoutButton").addEventListener("click",()=>{
+ currentPatientId=null;
+ $("portal").classList.add("hidden");
+ $("loginSection").classList.remove("hidden");
+ $("loginForm").reset();
+ $("searchForm").reset();
+ $("patientSection").classList.add("hidden");
+ $("prescriptionSection").classList.add("hidden");
+ $("searchMessage").textContent="";
+ $("saveMessage").textContent="";
+});
+</script>
+</body>
+</html>

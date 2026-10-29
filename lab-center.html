@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lab Center | Unified Health ID</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f2f9f8;
+    color: #203a40;
+}
+
+header {
+    background: white;
+    padding: 22px 6%;
+    border-bottom: 1px solid #dce9e7;
+}
+
+header h2 {
+    color: #147d78;
+}
+
+nav {
+    background: white;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 16px 6%;
+}
+
+nav a {
+    text-decoration: none;
+    color: #34575a;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: #147d78;
+}
+
+main {
+    max-width: 950px;
+    margin: 30px auto;
+    padding: 16px;
+}
+
+.card {
+    background: white;
+    padding: 26px;
+    border-radius: 14px;
+    box-shadow: 0 4px 18px #163c3c12;
+    margin-bottom: 22px;
+}
+
+.login-card {
+    max-width: 480px;
+    margin: 35px auto;
+}
+
+h1 {
+    font-size: 27px;
+    margin-bottom: 12px;
+}
+
+h2 {
+    font-size: 20px;
+    color: #147d78;
+    margin: 20px 0 12px;
+}
+
+p {
+    color: #63787b;
+    line-height: 1.7;
+    margin-bottom: 12px;
+}
+
+label {
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    margin: 16px 0 7px;
+}
+
+input, textarea, select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cbdcda;
+    border-radius: 7px;
+    font: inherit;
+    background: white;
+    color: #203a40;
+}
+
+textarea {
+    resize: vertical;
+}
+
+input:focus, textarea:focus, select:focus {
+    outline: 2px solid #a7d7ce;
+}
+
+button {
+    border: none;
+    border-radius: 7px;
+    padding: 13px 17px;
+    margin-top: 15px;
+    background: #147d78;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #0c625e;
+}
+
+.full {
+    width: 100%;
+}
+
+.secondary {
+    background: #eaf6f3;
+    color: #147d78;
+}
+
+.secondary:hover {
+    background: #d8eee8;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.message {
+    margin-top: 12px;
+    font-size: 14px;
+}
+
+.notice {
+    margin-top: 18px;
+    padding: 12px;
+    border-radius: 8px;
+    background: #fff8df;
+    border: 1px solid #efdfa6;
+    color: #79621d;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.patient-details {
+    background: #eaf6f3;
+    border-radius: 9px;
+    padding: 17px;
+    line-height: 1.9;
+    overflow-wrap: anywhere;
+    margin: 18px 0;
+}
+
+.report {
+    border: 1px solid #dce9e7;
+    border-radius: 10px;
+    padding: 18px;
+    margin: 14px 0;
+    overflow-wrap: anywhere;
+}
+
+.report p {
+    margin: 7px 0;
+}
+
+.report-title {
+    color: #147d78;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+@media(max-width: 600px) {
+    header {
+        padding: 20px;
+    }
+
+    nav {
+        padding: 15px 20px;
+        gap: 13px;
+    }
+
+    .card {
+        padding: 19px;
+    }
+
+    h1 {
+        font-size: 23px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h2>✚ Unified Health ID</h2>
+</header>
+
+<nav>
+    <a href="./index.html">Home</a>
+    <a href="./patient.html">Patient</a>
+    <a href="./doctor.html">Doctor</a>
+    <a href="./pharmacy.html">Pharmacy</a>
+    <a href="./register.html">Register</a>
+</nav>
+
+<main>
+
+<!-- STEP 1: LAB CENTER LOGIN -->
+
+<section class="card login-card" id="loginSection">
+    <h1>Lab Center Login</h1>
+    <p>Enter your registered Lab Center ID to continue.</p>
+
+    <form id="labLoginForm">
+        <label for="labCenterId">Lab Center ID</label>
+        <input
+            type="password"
+            id="labCenterId"
+            placeholder="Enter Lab Center ID"
+            autocomplete="off"
+            required
+        >
+
+        <button type="submit" class="full">Login →</button>
+        <p id="loginMessage" class="message" role="status"></p>
+    </form>
+
+    <div class="notice">
+        Demo Lab Center ID: <strong>LAB-CENTER-001</strong>
+    </div>
+</section>
+
+<!-- STEP 2: PATIENT SEARCH -->
+
+<section class="card hidden" id="searchSection">
+    <h1>Find Patient</h1>
+    <p>Enter the patient's Health ID before adding a lab report.</p>
+
+    <form id="patientSearchForm">
+        <label for="patientId">Patient Health ID</label>
+        <input
+            type="text"
+            id="patientId"
+            inputmode="numeric"
+            maxlength="5"
+            pattern="[0-9]{5}"
+            placeholder="Enter five-digit Patient ID"
+            required
+        >
+
+        <button type="submit" class="full">Find Patient →</button>
+        <p id="patientMessage" class="message" role="status"></p>
+    </form>
+
+    <button type="button" id="logoutButton" class="full secondary">
+        Logout
+    </button>
+</section>
+
+<!-- STEP 3: PATIENT AND EXISTING REPORTS -->
+
+<section class="card hidden" id="patientSection">
+    <h1>Patient Profile</h1>
+    <div id="patientDetails" class="patient-details"></div>
+
+    <h2>Previous Lab Reports</h2>
+    <div id="reportList"></div>
+
+    <button type="button" id="newReportButton" class="full">
+        + Add Lab Report
+    </button>
+
+    <button type="button" id="changePatientButton" class="full secondary">
+        Search Another Patient
+    </button>
+</section>
+
+<!-- STEP 4: ADD LAB REPORT -->
+
+<section class="card hidden" id="reportSection">
+    <h1>Enter Lab Report</h1>
+    <p id="reportPatient"></p>
+
+    <form id="reportForm">
+
+        <label for="testName">Test Name</label>
+        <input
+            id="testName"
+            placeholder="e.g. Complete Blood Count"
+            required
+        >
+
+        <label for="testReason">Reason for Test</label>
+        <textarea
+            id="testReason"
+            rows="2"
+            placeholder="Enter the reason for the test"
+            required
+        ></textarea>
+
+        <label for="findings">Findings</label>
+        <textarea
+            id="findings"
+            rows="4"
+            placeholder="Enter the laboratory findings"
+            required
+        ></textarea>
+
+        <label for="testResult">Final Result</label>
+        <textarea
+            id="testResult"
+            rows="3"
+            placeholder="Enter the result as reported by the laboratory"
+            required
+        ></textarea>
+
+        <label for="conclusion">Conclusion</label>
+        <textarea
+            id="conclusion"
+            rows="3"
+            placeholder="Enter the laboratory conclusion"
+            required
+        ></textarea>
+
+        <label for="reportDate">Report Date</label>
+        <input type="date" id="reportDate" required>
+
+        <button type="submit" class="full">Save Lab Report →</button>
+        <button type="button" id="cancelReportButton" class="full secondary">
+            Cancel
+        </button>
+
+        <p id="saveMessage" class="message" role="status"></p>
+    </form>
+</section>
+
+</main>
+
+<script src="./data.js"></script>
+
+<script>
+let currentPatientId = "";
+
+function escapeHTML(value) {
+    return String(value == null || value === "" ? "N/A" : value)
+        .replace(/[&<>"']/g, function(char) {
+            return {
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;"
+            }[char];
+        });
+}
+
+function showMessage(id, message, isError = false) {
+    const element = document.getElementById(id);
+    element.textContent = message;
+    element.style.color = isError ? "#b42318" : "#147d78";
+}
+
+function loadDatabase() {
+    if (typeof loadDB !== "function") {
+        throw new Error("loadDB() was not found. Check your data.js file.");
+    }
+
+    return loadDB();
+}
+
+function saveDatabase(db) {
+    if (typeof saveDB === "function") {
+        saveDB(db);
+        return;
+    }
+
+    const key = typeof STORAGE_KEY !== "undefined"
+        ? STORAGE_KEY
+        : "unifiedHealthPrototype_v1";
+
+    localStorage.setItem(key, JSON.stringify(db));
+}
+
+function findPatient(db, id) {
+    if (!db || !db.patients) {
+        return null;
+    }
+
+    if (!Array.isArray(db.patients) && db.patients[id]) {
+        return db.patients[id];
+    }
+
+    if (Array.isArray(db.patients)) {
+        return db.patients.find(function(patient) {
+            return String(patient.id) === String(id);
+        }) || null;
+    }
+
+    return null;
+}
+
+function getLabReports(patient) {
+    if (!Array.isArray(patient.labReports)) {
+        patient.labReports = [];
+    }
+
+    return patient.labReports;
+}
+
+/* STEP 1: LAB LOGIN */
+
+document.getElementById("labLoginForm")
+.addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const id = document.getElementById("labCenterId").value.trim();
+
+    if (id !== "LAB-CENTER-001") {
+        showMessage(
+            "loginMessage",
+            "Invalid Lab Center ID. Please try again.",
+            true
+        );
+        return;
+    }
+
+    showMessage("loginMessage", "", false);
+
+    document.getElementById("loginSection").classList.add("hidden");
+    document.getElementById("searchSection").classList.remove("hidden");
+
+    window.scrollTo(0, 0);
+});
+
+/* STEP 2: SEARCH PATIENT */
+
+document.getElementById("patientSearchForm")
+.addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const id = document.getElementById("patientId").value.trim();
+
+    if (!/^[0-9]{5}$/.test(id)) {
+        showMessage("patientMessage", "Enter a valid five-digit Patient ID.", true);
+        return;
+    }
+
+    try {
+        const db = loadDatabase();
+        const patient = findPatient(db, id);
+
+        if (!patient) {
+            showMessage(
+                "patientMessage",
+                "Patient not found. Check the ID or register the patient first.",
+                true
+            );
+            return;
+        }
+
+        currentPatientId = id;
+        renderPatient(patient);
+
+        document.getElementById("searchSection").classList.add("hidden");
+        document.getElementById("patientSection").classList.remove("hidden");
+        document.getElementById("reportSection").classList.add("hidden");
+
+        window.scrollTo(0, 0);
+
+    } catch (error) {
+        showMessage("patientMessage", error.message, true);
+    }
+});
+
+/* DISPLAY PATIENT DETAILS */
+
+function renderPatient(patient) {
+    document.getElementById("patientDetails").innerHTML = `
+        <strong>Patient Name:</strong> ${escapeHTML(patient.fullName)}<br>
+        <strong>Patient ID:</strong> ${escapeHTML(patient.id)}<br>
+        <strong>Age:</strong> ${escapeHTML(patient.age)}<br>
+        <strong>Height:</strong> ${escapeHTML(patient.height ? patient.height + " cm" : "N/A")}<br>
+        <strong>Weight:</strong> ${escapeHTML(patient.weight ? patient.weight + " kg" : "N/A")}<br>
+        <strong>Blood Group:</strong> ${escapeHTML(patient.bloodGroup)}<br>
+        <strong>Allergies:</strong> ${escapeHTML(patient.allergies || "None recorded")}
+    `;
+
+    renderReports(patient);
+}
+
+/* DISPLAY SAVED LAB REPORTS */
+
+function renderReports(patient) {
+    const container = document.getElementById("reportList");
+    const reports = getLabReports(patient);
+
+    if (reports.length === 0) {
+        container.innerHTML = "<p>No lab reports have been saved for this patient yet.</p>";
+        return;
+    }
+
+    container.innerHTML = reports.map(function(report, index) {
+        return `
+            <article class="report">
+                <h3 class="report-title">
+                    ${index + 1}. ${escapeHTML(report.testName)}
+                </h3>
+
+                <p><strong>Report Date:</strong> ${escapeHTML(report.date)}</p>
+                <p><strong>Reason for Test:</strong> ${escapeHTML(report.reason)}</p>
+                <p><strong>Findings:</strong><br>${escapeHTML(report.findings)}</p>
+                <p><strong>Final Result:</strong><br>${escapeHTML(report.result)}</p>
+                <p><strong>Conclusion:</strong><br>${escapeHTML(report.conclusion)}</p>
+            </article>
+        `;
+    }).join("");
+}
+
+/* STEP 3: OPEN NEW REPORT FORM */
+
+document.getElementById("newReportButton")
+.addEventListener("click", function() {
+    document.getElementById("reportForm").reset();
+
+    document.getElementById("reportPatient").textContent =
+        "Patient Health ID: " + currentPatientId;
+
+    document.getElementById("reportDate").value =
+        new Date().toISOString().slice(0, 10);
+
+    showMessage("saveMessage", "", false);
+
+    document.getElementById("patientSection").classList.add("hidden");
+    document.getElementById("reportSection").classList.remove("hidden");
+
+    window.scrollTo(0, 0);
+});
+
+/* STEP 4: SAVE REPORT TO THE PATIENT'S RECORD */
+
+document.getElementById("reportForm")
+.addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    if (!currentPatientId) {
+        showMessage("saveMessage", "Find a patient before saving a report.", true);
+        return;
+    }
+
+    const report = {
+        testName: document.getElementById("testName").value.trim(),
+        reason: document.getElementById("testReason").value.trim(),
+        findings: document.getElementById("findings").value.trim(),
+        result: document.getElementById("testResult").value.trim(),
+        conclusion: document.getElementById("conclusion").value.trim(),
+        date: document.getElementById("reportDate").value
+    };
+
+    if (
+        !report.testName ||
+        !report.reason ||
+        !report.findings ||
+        !report.result ||
+        !report.conclusion ||
+        !report.date
+    ) {
+        showMessage("saveMessage", "Please complete all report fields.", true);
+        return;
+    }
+
+    try {
+        const db = loadDatabase();
+        const patient = findPatient(db, currentPatientId);
+
+        if (!patient) {
+            showMessage("saveMessage", "Patient record not found.", true);
+            return;
+        }
+
+        // Attach the report directly to the matching patient's record.
+        getLabReports(patient).push(report);
+
+        // Save the updated database.
+        saveDatabase(db);
+
+        renderPatient(patient);
+
+        document.getElementById("reportForm").reset();
+        document.getElementById("reportSection").classList.add("hidden");
+        document.getElementById("patientSection").classList.remove("hidden");
+
+        window.scrollTo(0, 0);
+
+    } catch (error) {
+        showMessage(
+            "saveMessage",
+            "Could not save report: " + error.message,
+            true
+        );
+    }
+});
+
+/* CANCEL REPORT */
+
+document.getElementById("cancelReportButton")
+.addEventListener("click", function() {
+    document.getElementById("reportSection").classList.add("hidden");
+    document.getElementById("patientSection").classList.remove("hidden");
+});
+
+/* SEARCH ANOTHER PATIENT */
+
+document.getElementById("changePatientButton")
+.addEventListener("click", function() {
+    currentPatientId = "";
+    document.getElementById("patientSearchForm").reset();
+
+    showMessage("patientMessage", "", false);
+
+    document.getElementById("patientSection").classList.add("hidden");
+    document.getElementById("searchSection").classList.remove("hidden");
+
+    window.scrollTo(0, 0);
+});
+
+/* LOGOUT */
+
+function logoutLabCenter() {
+    currentPatientId = "";
+
+    document.getElementById("labLoginForm").reset();
+    document.getElementById("patientSearchForm").reset();
+    document.getElementById("reportForm").reset();
+
+    document.getElementById("loginSection").classList.remove("hidden");
+    document.getElementById("searchSection").classList.add("hidden");
+    document.getElementById("patientSection").classList.add("hidden");
+    document.getElementById("reportSection").classList.add("hidden");
+
+    showMessage("loginMessage", "", false);
+    showMessage("patientMessage", "", false);
+    showMessage("saveMessage", "", false);
+
+    window.scrollTo(0, 0);
+}
+
+document.getElementById("logoutButton")
+.addEventListener("click", logoutLabCenter);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Patient Profile | Unified Health ID</title>
+
+<style>
+:root {
+    --teal: #197e78;
+    --teal-dark: #11635f;
+    --mint: #eaf6f4;
+    --cream: #fffef8;
+    --text: #293f43;
+    --muted: #718184;
+    --border: #d9e5e1;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    color: var(--text);
+    background: #f4f8f7;
+}
+
+header {
+    background: white;
+    padding: 20px 6%;
+    border-bottom: 1px solid var(--border);
+}
+
+header h2 {
+    margin: 0;
+    color: var(--teal);
+}
+
+nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 15px 6%;
+    background: white;
+}
+
+nav a {
+    color: var(--text);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: var(--teal);
+}
+
+main {
+    max-width: 1050px;
+    margin: 28px auto;
+    padding: 0 16px 35px;
+}
+
+h1 {
+    font-size: 29px;
+    margin: 0 0 10px;
+}
+
+h2 {
+    font-size: 25px;
+    margin: 30px 0 16px;
+}
+
+p {
+    line-height: 1.6;
+}
+
+.search-card,
+.profile-card,
+.report-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    padding: 22px;
+    margin-bottom: 22px;
+}
+
+.search-row {
+    display: flex;
+    gap: 10px;
+}
+
+input {
+    width: 100%;
+    min-width: 0;
+    padding: 13px;
+    border: 1px solid #cbdad7;
+    border-radius: 7px;
+    font-size: 16px;
+}
+
+button {
+    background: var(--teal);
+    color: white;
+    border: none;
+    border-radius: 7px;
+    padding: 13px 18px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background: var(--teal-dark);
+}
+
+.profile-card {
+    background: var(--mint);
+    border: none;
+}
+
+.profile-name {
+    color: var(--teal-dark);
+    font-size: 26px;
+    margin: 0 0 8px;
+}
+
+.health-id {
+    color: var(--muted);
+    margin: 0 0 20px;
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.detail {
+    overflow-wrap: anywhere;
+    line-height: 1.6;
+}
+
+.detail strong {
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.rx-card {
+    background: var(--cream);
+    border: 1px solid #e0dfd0;
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px #173a3510;
+}
+
+.rx-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 3px solid var(--teal);
+    padding-bottom: 14px;
+    margin-bottom: 18px;
+}
+
+.rx-title {
+    color: var(--teal);
+    font-size: 26px;
+    font-weight: bold;
+}
+
+.rx-subtitle {
+    color: var(--muted);
+    letter-spacing: 2px;
+    margin-top: 5px;
+    font-size: 13px;
+}
+
+.rx-symbol {
+    color: var(--teal);
+    font-size: 43px;
+    font-weight: bold;
+}
+
+.rx-info p {
+    margin: 10px 0;
+}
+
+.diagnosis {
+    background: #f0f6f5;
+    border-left: 5px solid var(--teal);
+    padding: 13px;
+    margin: 18px 0;
+    overflow-wrap: anywhere;
+}
+
+.table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    margin: 18px 0;
+    border-radius: 5px;
+    -webkit-overflow-scrolling: touch;
+}
+
+table {
+    width: 100%;
+    min-width: 680px;
+    border-collapse: collapse;
+    background: white;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid var(--border);
+    text-align: left;
+    vertical-align: top;
+    overflow-wrap: anywhere;
+}
+
+th {
+    background: var(--mint);
+    color: var(--text);
+}
+
+.any-test {
+    padding: 13px;
+    background: #f0f6f5;
+    border-radius: 7px;
+    margin: 16px 0;
+    overflow-wrap: anywhere;
+}
+
+.signature {
+    text-align: right;
+    color: var(--muted);
+    line-height: 1.8;
+    margin-top: 24px;
+}
+
+.signature-line {
+    display: inline-block;
+    width: 190px;
+    border-top: 1px solid var(--text);
+    margin-bottom: 5px;
+}
+
+.report-card {
+    border-left: 4px solid var(--teal);
+    overflow-wrap: anywhere;
+}
+
+.report-card h3 {
+    color: var(--teal-dark);
+    margin-top: 0;
+}
+
+.message {
+    color: #b42318;
+    margin-top: 12px;
+}
+
+.empty {
+    color: var(--muted);
+    padding: 8px 0 18px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.actions {
+    margin-top: 25px;
+}
+
+@media(max-width: 600px) {
+    header {
+        padding: 18px 20px;
+    }
+
+    nav {
+        padding: 14px 20px;
+        gap: 14px;
+    }
+
+    main {
+        margin-top: 20px;
+        padding: 0 12px 28px;
+    }
+
+    h1 {
+        font-size: 25px;
+    }
+
+    h2 {
+        font-size: 23px;
+    }
+
+    .search-card,
+    .profile-card,
+    .report-card,
+    .rx-card {
+        padding: 17px;
+    }
+
+    .search-row {
+        flex-direction: column;
+    }
+
+    .search-row button {
+        width: 100%;
+    }
+
+    .details-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .rx-title {
+        font-size: 22px;
+    }
+
+    .rx-symbol {
+        font-size: 35px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h2>✚ Unified Health ID</h2>
+</header>
+
+<nav>
+    <a href="./index.html">Home</a>
+    <a href="./register.html">Register Patient</a>
+    <a href="./doctor.html">Doctor</a>
+    <a href="./pharmacy.html">Pharmacy</a>
+    <a href="./lab-center.html">Lab Center</a>
+</nav>
+
+<main>
+    <h1>Patient Health Profile</h1>
+    <p>View patient details, digital prescriptions and laboratory reports.</p>
+
+    <section class="search-card">
+        <form id="searchForm">
+            <label for="patientId"><strong>Enter Patient Health ID</strong></label>
+            <div class="search-row">
+                <input
+                    id="patientId"
+                    type="text"
+                    inputmode="numeric"
+                    placeholder="e.g. 10006"
+                    required
+                >
+                <button type="submit">Search Patient</button>
+            </div>
+        </form>
+        <p id="searchMessage" class="message" role="status"></p>
+    </section>
+
+    <section id="profileSection" class="hidden">
+
+        <section class="profile-card">
+            <h2 class="profile-name" id="patientName"></h2>
+            <p class="health-id">
+                Health ID: <strong id="displayId"></strong>
+            </p>
+
+            <div class="details-grid">
+                <div class="detail"><strong>Age:</strong><span id="age"></span></div>
+                <div class="detail"><strong>Gender:</strong><span id="gender"></span></div>
+                <div class="detail"><strong>Height:</strong><span id="height"></span></div>
+                <div class="detail"><strong>Weight:</strong><span id="weight"></span></div>
+                <div class="detail"><strong>Blood Group:</strong><span id="bloodGroup"></span></div>
+                <div class="detail"><strong>Phone:</strong><span id="phone"></span></div>
+                <div class="detail"><strong>Disability:</strong><span id="disability"></span></div>
+                <div class="detail"><strong>Known Allergies:</strong><span id="allergies"></span></div>
+                <div class="detail"><strong>Existing Conditions:</strong><span id="conditions"></span></div>
+                <div class="detail"><strong>Address:</strong><span id="address"></span></div>
+            </div>
+
+            <div id="disabilityDetailsRow" class="detail hidden" style="margin-top:14px">
+                <strong>Disability Details:</strong>
+                <span id="disabilityDetails"></span>
+            </div>
+        </section>
+
+        <h2>Prescriptions</h2>
+        <div id="prescriptionsContainer"></div>
+
+        <h2>Lab Reports</h2>
+        <div id="labReportsContainer"></div>
+
+        <div class="actions">
+            <button type="button" id="searchAnotherButton">
+                Search Another ID
+            </button>
+        </div>
+    </section>
+</main>
+
+<script src="./data.js"></script>
+
+<script>
+const $ = (id) => document.getElementById(id);
+
+function safeText(value, fallback = "—") {
+    if (value === null || value === undefined || value === "") {
+        return fallback;
+    }
+
+    if (typeof value === "object") {
+        return fallback;
+    }
+
+    return String(value);
+}
+
+/* Escape values before inserting them into HTML. */
+function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, function(char) {
+        return {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+        }[char];
+    });
+}
+
+function loadDatabase() {
+    if (typeof loadDB !== "function") {
+        throw new Error("loadDB() is missing. Check your data.js file.");
+    }
+
+    return loadDB();
+}
+
+function findPatient(db, id) {
+    const patients = db.patients || {};
+
+    if (Array.isArray(patients)) {
+        return patients.find(patient => String(patient.id) === String(id));
+    }
+
+    return patients[id] ||
+        Object.values(patients).find(patient =>
+            String(patient.id) === String(id)
+        );
+}
+
+function getArray(value) {
+    return Array.isArray(value) ? value : [];
+}
+
+function displayPatient(patient, searchedId) {
+    $("patientName").textContent = safeText(patient.fullName, "Patient");
+    $("displayId").textContent = safeText(patient.id, searchedId);
+    $("age").textContent = safeText(patient.age);
+    $("gender").textContent = safeText(patient.gender);
+    $("height").textContent = patient.height
+        ? safeText(patient.height) + " cm"
+        : "—";
+    $("weight").textContent = patient.weight
+        ? safeText(patient.weight) + " kg"
+        : "—";
+    $("bloodGroup").textContent = safeText(patient.bloodGroup);
+    $("phone").textContent = safeText(patient.phone);
+    $("disability").textContent = safeText(patient.disability);
+    $("allergies").textContent = safeText(patient.allergies);
+    $("conditions").textContent = safeText(patient.existingConditions);
+    $("address").textContent = safeText(patient.address);
+
+    const disabilityDetails = patient.disabilityDetails;
+
+    if (patient.disability === "Yes" && disabilityDetails) {
+        $("disabilityDetails").textContent = safeText(disabilityDetails);
+        $("disabilityDetailsRow").classList.remove("hidden");
+    } else {
+        $("disabilityDetails").textContent = "";
+        $("disabilityDetailsRow").classList.add("hidden");
+    }
+
+    displayPrescriptions(patient);
+    displayLabReports(patient);
+
+    $("profileSection").classList.remove("hidden");
+}
+
+function displayPrescriptions(patient) {
+    const container = $("prescriptionsContainer");
+    const prescriptions = getArray(patient.prescriptions);
+
+    if (!prescriptions.length) {
+        container.innerHTML =
+            '<p class="empty">No prescriptions available yet.</p>';
+        return;
+    }
+
+    container.innerHTML = prescriptions.map((prescription, prescriptionIndex) => {
+        const medicines = Array.isArray(prescription.medicines)
+            ? prescription.medicines
+            : [];
+
+        const medicineRows = medicines.length
+            ? medicines.map((medicine, index) => {
+                /* Support older records stored as plain strings. */
+                if (typeof medicine === "string") {
+                    return `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${escapeHTML(medicine)}</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>—</td>
+                        </tr>
+                    `;
+                }
+
+                return `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${escapeHTML(medicine.name || "—")}</td>
+                        <td>${escapeHTML(medicine.foodTiming || "—")}</td>
+                        <td>${escapeHTML(medicine.dosage || "—")}</td>
+                        <td>${escapeHTML(medicine.dosageRange || "—")}</td>
+                        <td>${escapeHTML(medicine.duration || "—")}</td>
+                    </tr>
+                `;
+            }).join("")
+            : `
+                <tr>
+                    <td colspan="6">No medicine details recorded.</td>
+                </tr>
+            `;
+
+        const labTest = prescription.anyLabTest ||
+            prescription.labTest ||
+            prescription.testRecommended ||
+            "";
+
+        return `
+            <article class="rx-card">
+                <div class="rx-header">
+                    <div>
+                        <div class="rx-title">Unified Health ID</div>
+                        <div class="rx-subtitle">DIGITAL PRESCRIPTION</div>
+                    </div>
+                    <div class="rx-symbol">℞</div>
+                </div>
+
+                <div class="rx-info">
+                    <p><strong>Patient:</strong> ${escapeHTML(patient.fullName || "—")}</p>
+                    <p><strong>Patient ID:</strong> ${escapeHTML(patient.id || "—")}</p>
+                    <p><strong>Age / Gender:</strong>
+                        ${escapeHTML(patient.age || "—")} /
+                        ${escapeHTML(patient.gender || "—")}
+                    </p>
+                    <p><strong>Date:</strong> ${escapeHTML(prescription.date || "—")}</p>
+                    <p><strong>Blood Group:</strong> ${escapeHTML(patient.bloodGroup || "—")}</p>
+                    <p><strong>Rx No:</strong> ${prescriptionIndex + 1}</p>
+                </div>
+
+                <div class="diagnosis">
+                    <strong>Diagnosis:</strong>
+                    ${escapeHTML(prescription.diagnosis || "—")}
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>S. No.</th>
+                                <th>Medicine Name</th>
+                                <th>Before / After Food</th>
+                                <th>Dosage</th>
+                                <th>Dosage Range</th>
+                                <th>Duration</th>
+                            </tr>
+                        </thead>
+                        <tbody>${medicineRows}</tbody>
+                    </table>
+                </div>
+
+                <div class="any-test">
+                    <strong>Any Lab Test:</strong>
+                    ${escapeHTML(labTest || "Not specified")}
+                </div>
+
+                <div class="signature">
+                    <span class="signature-line"></span><br>
+                    Doctor's Signature<br>
+                    Reg. No: MED-DOC-001
+                </div>
+            </article>
+        `;
+    }).join("");
+}
+
+function displayLabReports(patient) {
+    const container = $("labReportsContainer");
+
+    const reports = getArray(patient.labReports);
+
+    if (!reports.length) {
+        container.innerHTML =
+            '<p class="empty">No lab reports available yet.</p>';
+        return;
+    }
+
+    container.innerHTML = reports.map((report, index) => `
+        <article class="report-card">
+            <h3>${escapeHTML(report.testName || "Lab Test")}</h3>
+            <p><strong>Report No:</strong> ${index + 1}</p>
+            <p><strong>Date:</strong> ${escapeHTML(report.reportDate || report.date || "—")}</p>
+            <p><strong>Reason:</strong> ${escapeHTML(report.reason || "—")}</p>
+            <p><strong>Findings:</strong> ${escapeHTML(report.findings || "—")}</p>
+            <p><strong>Final Result:</strong> ${escapeHTML(report.finalResult || "—")}</p>
+            <p><strong>Conclusion:</strong> ${escapeHTML(report.conclusion || "—")}</p>
+        </article>
+    `).join("");
+}
+
+/* SEARCH BY PATIENT HEALTH ID */
+
+$("searchForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const id = $("patientId").value.trim();
+
+    $("profileSection").classList.add("hidden");
+    $("searchMessage").textContent = "";
+
+    try {
+        const db = loadDatabase();
+        const patient = findPatient(db, id);
+
+        if (!patient) {
+            $("searchMessage").textContent =
+                "Patient not found. Please check the Health ID.";
+            return;
+        }
+
+        displayPatient(patient, id);
+
+    } catch (error) {
+        $("searchMessage").textContent =
+            "Unable to load patient details: " + error.message;
+    }
+});
+
+$("searchAnotherButton").addEventListener("click", function() {
+    $("patientId").value = "";
+    $("profileSection").classList.add("hidden");
+    $("searchMessage").textContent = "";
+    $("patientId").focus();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+});
+</script>
+
+</body>
+</html>

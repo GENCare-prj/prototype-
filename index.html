@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unified Health ID | Smarter Healthcare</title>
+
+<style>
+:root {
+  --teal: #176b68;
+  --dark: #104e50;
+  --gold: #d4af37;
+  --mint: #eaf7f3;
+  --text: #294542;
+  --muted: #71827d;
+  --border: #dfebe5;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  color: var(--text);
+  background: #f7fbf9;
+  line-height: 1.6;
+}
+
+a { text-decoration: none; color: inherit; }
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 17px 7%;
+  background: white;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.brand {
+  font-size: 23px;
+  font-weight: 800;
+  color: var(--teal);
+}
+
+.brand span { color: var(--gold); }
+
+.nav-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.nav-links a {
+  color: #506562;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.nav-links a:hover { color: var(--teal); }
+
+/* Gold demo access button */
+
+.access {
+  text-align: center;
+  padding: 24px 6%;
+  background: white;
+}
+
+.gold-btn {
+  border: 1px solid #d8b84c;
+  border-radius: 12px;
+  padding: 13px 24px;
+  color: #60480e;
+  font-weight: 800;
+  cursor: pointer;
+  background: linear-gradient(120deg, #fff1b9, #d4af37, #f8e6a0);
+  box-shadow: 0 6px 18px #c4a43a30;
+}
+
+.credentials {
+  max-width: 550px;
+  margin: 20px auto 0;
+  padding: 22px;
+  text-align: left;
+  border: 1px solid #e1c65e;
+  border-radius: 14px;
+  background: #fffbed;
+}
+
+.credentials[hidden] { display: none; }
+
+.credentials h2 {
+  color: #896914;
+  font-size: 21px;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.credentials p {
+  color: #766746;
+  font-size: 13px;
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.credential {
+  padding: 10px 12px;
+  margin-top: 8px;
+  background: white;
+  border: 1px solid #f0e3b2;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.credential strong { color: #745714; }
+
+/* Hero */
+
+.hero {
+  padding: 70px 7%;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 40px;
+  align-items: center;
+  background: linear-gradient(125deg, #eaf8f3, #f9fcf8 60%, #fff8e3);
+}
+
+.eyebrow {
+  display: inline-block;
+  padding: 6px 13px;
+  background: #d9f0e9;
+  border-radius: 30px;
+  color: var(--teal);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  margin-bottom: 17px;
+}
+
+.hero h1 {
+  font-size: clamp(36px, 5vw, 57px);
+  line-height: 1.12;
+  letter-spacing: -1.5px;
+  color: #174f4c;
+  margin-bottom: 20px;
+}
+
+.hero h1 span { color: #bd9228; }
+
+.hero p {
+  color: var(--muted);
+  max-width: 540px;
+  margin-bottom: 25px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 12px 19px;
+  border-radius: 9px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.primary {
+  background: var(--teal);
+  color: white;
+}
+
+.secondary {
+  background: white;
+  color: var(--teal);
+  border: 1px solid #c8ddd3;
+}
+
+.health-card {
+  max-width: 370px;
+  width: 100%;
+  margin: auto;
+  overflow: hidden;
+  border-radius: 20px;
+  background: white;
+  box-shadow: 0 18px 45px #22574c20;
+}
+
+.card-top {
+  background: linear-gradient(135deg, #176b68, #104e50);
+  color: white;
+  padding: 24px;
+}
+
+.card-top small {
+  color: #ccebe0;
+  letter-spacing: 2px;
+}
+
+.card-top h2 { margin-top: 8px; }
+
+.card-body { padding: 24px; }
+
+.card-body .label {
+  color: #9c7c25;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.health-id {
+  font-size: 31px;
+  color: var(--teal);
+  font-weight: 800;
+  margin: 6px 0 17px;
+}
+
+.card-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.card-info small {
+  display: block;
+  color: #84928e;
+  font-size: 11px;
+}
+
+.card-info strong { font-size: 13px; }
+
+.card-note {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 18px;
+  border-top: 1px solid #edf1e9;
+  padding-top: 12px;
+}
+
+/* Portals */
+
+.section { padding: 70px 7%; }
+
+.section-heading {
+  text-align: center;
+  max-width: 650px;
+  margin: 0 auto 38px;
+}
+
+.section-heading h2 {
+  font-size: clamp(27px, 4vw, 37px);
+  color: #204f4b;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+
+.section-heading p {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.portal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.portal-card {
+  padding: 27px;
+  min-height: 230px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 17px;
+  transition: 0.2s;
+}
+
+.portal-card:hover {
+  transform: translateY(-4px);
+  border-color: #b9d9ca;
+  box-shadow: 0 12px 28px #22574c10;
+}
+
+.portal-icon {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  background: #e5f5ef;
+  font-size: 24px;
+  margin-bottom: 16px;
+}
+
+.portal-card h3 {
+  color: var(--teal);
+  font-size: 19px;
+  margin-bottom: 8px;
+}
+
+.portal-card p {
+  color: var(--muted);
+  font-size: 14px;
+  margin-bottom: 18px;
+}
+
+.portal-card a {
+  color: var(--teal);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+/* Workflow */
+
+.how {
+  background: #edf7f3;
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 25px;
+}
+
+.step {
+  padding: 20px;
+  text-align: center;
+}
+
+.number {
+  width: 45px;
+  height: 45px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: white;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.step h3 {
+  color: var(--teal);
+  margin-bottom: 8px;
+}
+
+.step p {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.register-banner {
+  padding: 38px;
+  border-radius: 20px;
+  color: white;
+  background: linear-gradient(120deg, #145b58, #207b70);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.register-banner h2 {
+  font-size: 29px;
+  margin-bottom: 8px;
+}
+
+.register-banner p {
+  color: #d3eae1;
+  font-size: 14px;
+}
+
+.register-banner .btn {
+  background: linear-gradient(120deg, #fff1b9, #d4af37, #f8e6a0);
+  color: #60480e;
+}
+
+footer {
+  background: #103f40;
+  color: #d9e9e3;
+  padding: 26px 7%;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 15px;
+  font-size: 12px;
+}
+
+@media(max-width: 750px) {
+  .hero { grid-template-columns: 1fr; text-align: center; }
+  .hero p { margin-left: auto; margin-right: auto; }
+  .actions { justify-content: center; }
+  .portal-grid, .steps { grid-template-columns: 1fr; }
+}
+
+@media(max-width: 550px) {
+  .navbar { justify-content: center; }
+  .nav-links { justify-content: center; gap: 12px 16px; }
+  .section { padding: 50px 6%; }
+  .hero { padding: 45px 6%; }
+  .register-banner { padding: 25px; }
+}
+</style>
+</head>
+
+<body>
+
+<header class="navbar">
+  <a href="index.html" class="brand">Unified <span>Health ID</span></a>
+
+  <nav class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="doctor.html">Doctor</a>
+    <a href="patient.html">Patient</a>
+    <a href="pharmacy.html">Pharmacy</a>
+    <a href="lab-center.html">Lab Center</a>
+    <a href="register.html">Register</a>
+  </nav>
+</header>
+
+<section class="access">
+  <button class="gold-btn" id="toggleCredentials" type="button">
+    🔐 View Demo Login IDs
+  </button>
+
+  <div class="credentials" id="credentials" hidden>
+    <h2>Demo Login Instructions</h2>
+    <p>Choose the relevant portal and enter its matching demonstration ID.</p>
+
+    <div class="credential">
+      <span>Government Officer — Register</span>
+      <strong>GOV001</strong>
+    </div>
+
+    <div class="credential">
+      <span>Doctor</span>
+      <strong>MED-DOC-001</strong>
+    </div>
+
+    <div class="credential">
+      <span>Pharmacy</span>
+      <strong>PHARM001</strong>
+    </div>
+
+    <div class="credential">
+      <span>Lab Center</span>
+      <strong>LAB-CENTER-001</strong>
+    </div>
+
+    <p style="margin:14px 0 0">
+      Demonstration IDs only; this is not secure authentication.
+    </p>
+  </div>
+</section>
+
+<main>
+  <section class="hero">
+    <div>
+      <span class="eyebrow">SMARTER HEALTHCARE</span>
+
+      <h1>
+        One Health ID<br>
+        <span>for every prescription</span><br>
+        and report.
+      </h1>
+
+      <p>
+        Doctors, pharmacies and patients can access connected
+        health information through one unified healthcare platform.
+      </p>
+
+      <div class="actions">
+        <a href="patient.html" class="btn primary">View My Records →</a>
+        <a href="register.html" class="btn secondary">Register a Patient</a>
+      </div>
+    </div>
+
+    <div class="health-card">
+      <div class="card-top">
+        <small>UNIFIED HEALTHCARE</small>
+        <h2>Health ID Card</h2>
+      </div>
+
+      <div class="card-body">
+        <div class="label">DEMO HEALTH ID</div>
+        <div class="health-id">10001</div>
+
+        <div class="card-info">
+          <div>
+            <small>Patient Name</small>
+            <strong>Demo Patient</strong>
+          </div>
+          <div>
+            <small>Record Type</small>
+            <strong>Digital Health</strong>
+          </div>
+          <div>
+            <small>Platform</small>
+            <strong>Unified Health ID</strong>
+          </div>
+          <div>
+            <small>Status</small>
+            <strong>Demo Record</strong>
+          </div>
+        </div>
+
+        <div class="card-note">
+          Sample card for project demonstration.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="portals">
+    <div class="section-heading">
+      <span class="eyebrow">CONNECTED CARE</span>
+      <h2>One Platform, Multiple Portals</h2>
+      <p>Choose the portal you need to access.</p>
+    </div>
+
+    <div class="portal-grid">
+
+      <article class="portal-card">
+        <div class="portal-icon">🩺</div>
+        <h3>Doctor Portal</h3>
+        <p>Access patient records and manage prescriptions and clinical information in one place.</p>
+        <a href="doctor.html">Open Doctor Portal →</a>
+      </article>
+
+      <article class="portal-card">
+        <div class="portal-icon">🧑‍⚕️</div>
+        <h3>Patient Portal</h3>
+        <p>View health information, prescriptions and available medical records.</p>
+        <a href="patient.html">Open Patient Portal →</a>
+      </article>
+
+      <article class="portal-card">
+        <div class="portal-icon">💊</div>
+        <h3>Pharmacy Portal</h3>
+        <p>Review prescription details and support the medicine dispensing workflow.</p>
+        <a href="pharmacy.html">Open Pharmacy Portal →</a>
+      </article>
+
+      <article class="portal-card">
+        <div class="portal-icon">🧪</div>
+        <h3>Lab Center Portal</h3>
+        <p>Add diagnostic test reports and connect test results with patient records.</p>
+        <a href="lab-center.html">Open Lab Center →</a>
+      </article>
+
+      <article class="portal-card">
+        <div class="portal-icon">📝</div>
+        <h3>Register</h3>
+        <p>Government officers can log in and register new patients to issue Health IDs.</p>
+        <a href="register.html">Open Registration Portal →</a>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="section how">
+    <div class="section-heading">
+      <span class="eyebrow">SIMPLE WORKFLOW</span>
+      <h2>How It Works</h2>
+      <p>A connected workflow for organizing patient healthcare information.</p>
+    </div>
+
+    <div class="steps">
+      <article class="step">
+        <div class="number">1</div>
+        <h3>Register</h3>
+        <p>An authorized government officer registers the patient and issues a Health ID.</p>
+      </article>
+
+      <article class="step">
+        <div class="number">2</div>
+        <h3>Record</h3>
+        <p>Doctors and laboratories add prescriptions and diagnostic reports.</p>
+      </article>
+
+      <article class="step">
+        <div class="number">3</div>
+        <h3>Access</h3>
+        <p>Patients can look up their available health information through their portal.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="register-banner">
+      <div>
+        <h2>Start Your Digital Health Journey</h2>
+        <p>Open the registration portal to begin the government officer login process.</p>
+      </div>
+      <a href="register.html" class="btn">Register a Patient →</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <strong>Unified Health ID</strong>
+  <span>Smarter healthcare through connected records.</span>
+  <span>Student Project · 2026</span>
+</footer>
+
+<script>
+document.getElementById("toggleCredentials").addEventListener("click", function() {
+  const panel = document.getElementById("credentials");
+  panel.hidden = !panel.hidden;
+  this.textContent = panel.hidden
+    ? "🔐 View Demo Login IDs"
+    : "✕ Hide Demo Login IDs";
+});
+</script>
+
+</body>
+</html>

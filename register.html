@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Patient Registration | Unified Health ID</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f2f9f8;
+    color: #203a40;
+}
+
+header {
+    background: white;
+    padding: 22px 6%;
+    border-bottom: 1px solid #dce9e7;
+}
+
+header h2 {
+    color: #147d78;
+}
+
+nav {
+    background: white;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 16px 6%;
+}
+
+nav a {
+    text-decoration: none;
+    color: #34575a;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: #147d78;
+}
+
+main {
+    max-width: 850px;
+    margin: 30px auto;
+    padding: 16px;
+}
+
+.card {
+    background: white;
+    padding: 28px;
+    border-radius: 14px;
+    box-shadow: 0 4px 18px #163c3c12;
+    margin-bottom: 22px;
+}
+
+.login-card {
+    max-width: 480px;
+    margin: 35px auto;
+}
+
+h1 {
+    font-size: 27px;
+    margin-bottom: 12px;
+}
+
+h2 {
+    font-size: 20px;
+    color: #147d78;
+    margin: 22px 0 12px;
+}
+
+p {
+    color: #63787b;
+    line-height: 1.7;
+    margin-bottom: 12px;
+}
+
+label {
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    margin: 16px 0 7px;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cbdcda;
+    border-radius: 7px;
+    font: inherit;
+    background: white;
+    color: #203a40;
+}
+
+textarea {
+    resize: vertical;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: 2px solid #a7d7ce;
+}
+
+button {
+    border: none;
+    border-radius: 7px;
+    padding: 13px 17px;
+    margin-top: 18px;
+    background: #147d78;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #0c625e;
+}
+
+.full {
+    width: 100%;
+}
+
+.secondary {
+    background: #eaf6f3;
+    color: #147d78;
+}
+
+.secondary:hover {
+    background: #d8eee8;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.message {
+    margin-top: 12px;
+    font-size: 14px;
+}
+
+.notice {
+    margin-top: 18px;
+    padding: 12px;
+    border-radius: 8px;
+    background: #fff8df;
+    border: 1px solid #efdfa6;
+    color: #79621d;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 18px;
+}
+
+.success-card {
+    background: #eaf6f3;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+    overflow-wrap: anywhere;
+}
+
+.success-card h2 {
+    margin-top: 0;
+}
+
+.health-note {
+    font-size: 12px;
+    margin-top: 7px;
+}
+
+@media(max-width: 600px) {
+    header {
+        padding: 20px;
+    }
+
+    nav {
+        padding: 15px 20px;
+        gap: 13px;
+    }
+
+    .card {
+        padding: 19px;
+    }
+
+    h1 {
+        font-size: 23px;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h2>✚ Unified Health ID</h2>
+</header>
+
+<nav>
+    <a href="./index.html">Home</a>
+    <a href="./patient.html">Patient</a>
+    <a href="./doctor.html">Doctor</a>
+    <a href="./pharmacy.html">Pharmacy</a>
+    <a href="./lab-center.html">Lab Center</a>
+</nav>
+
+<main>
+
+<!-- GOVERNMENT OFFICER LOGIN -->
+
+<section class="card login-card" id="loginSection">
+    <h1>Government Officer Login</h1>
+    <p>Authorized officers can register new patients in the system.</p>
+
+    <form id="officerLoginForm">
+        <label for="officerId">Government Officer ID</label>
+        <input
+            type="password"
+            id="officerId"
+            placeholder="Enter Government Officer ID"
+            autocomplete="off"
+            required
+        >
+
+        <button type="submit" class="full">Login →</button>
+        <p id="loginMessage" class="message" role="status"></p>
+    </form>
+
+    <div class="notice">
+        Demo Government Officer ID: <strong>GOV001</strong>
+    </div>
+</section>
+
+<!-- PATIENT REGISTRATION -->
+
+<section class="card hidden" id="registrationSection">
+    <h1>Patient Registration</h1>
+    <p>Enter the patient's details to create a Unified Health ID record.</p>
+
+    <form id="registrationForm">
+
+        <h2>Personal Details</h2>
+
+        <label for="fullName">Full Name</label>
+        <input
+            type="text"
+            id="fullName"
+            placeholder="Enter full name"
+            autocomplete="name"
+            required
+        >
+
+        <div class="grid">
+            <div>
+                <label for="age">Age</label>
+                <input
+                    type="number"
+                    id="age"
+                    min="0"
+                    max="125"
+                    placeholder="Age in years"
+                    required
+                >
+            </div>
+
+            <div>
+                <label for="gender">Gender</label>
+                <select id="gender" required>
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                    <option value="Prefer not to say">Prefer not to say</option>
+                </select>
+            </div>
+        </div>
+
+        <label for="phone">Phone Number</label>
+        <input
+            type="tel"
+            id="phone"
+            inputmode="tel"
+            placeholder="Enter phone number"
+            autocomplete="tel"
+        >
+
+        <label for="address">Address</label>
+        <textarea
+            id="address"
+            rows="2"
+            placeholder="Enter residential address"
+        ></textarea>
+
+        <h2>Physical Details</h2>
+
+        <div class="grid">
+            <div>
+                <label for="height">Height (cm)</label>
+                <input
+                    type="number"
+                    id="height"
+                    min="1"
+                    max="300"
+                    step="0.1"
+                    placeholder="e.g. 165"
+                    required
+                >
+            </div>
+
+            <div>
+                <label for="weight">Weight (kg)</label>
+                <input
+                    type="number"
+                    id="weight"
+                    min="1"
+                    max="700"
+                    step="0.1"
+                    placeholder="e.g. 60"
+                    required
+                >
+            </div>
+        </div>
+
+        <div class="grid">
+            <div>
+                <label for="bloodGroup">Blood Group</label>
+                <select id="bloodGroup" required>
+                    <option value="">Select Blood Group</option>
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                    <option value="Unknown">Unknown</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="disability">Disability</label>
+                <select id="disability" required>
+                    <option value="">Select an option</option>
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                    <option value="Prefer not to say">Prefer not to say</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="disabilityDetailsBox" class="hidden">
+            <label for="disabilityDetails">Disability Details (Optional)</label>
+            <textarea
+                id="disabilityDetails"
+                rows="3"
+                placeholder="Enter relevant details if the patient wishes"
+            ></textarea>
+        </div>
+
+        <h2>Medical Details</h2>
+
+        <label for="allergies">Known Allergies</label>
+        <textarea
+            id="allergies"
+            rows="2"
+            placeholder="Enter known allergies, or write None"
+        ></textarea>
+
+        <label for="existingConditions">Existing Medical Conditions</label>
+        <textarea
+            id="existingConditions"
+            rows="2"
+            placeholder="Enter known conditions, if any"
+        ></textarea>
+
+        <button type="submit" class="full">Register Patient →</button>
+
+        <button type="button" id="logoutButton" class="full secondary">
+            Logout
+        </button>
+
+        <p id="registrationMessage" class="message" role="status"></p>
+    </form>
+
+    <div id="successCard" class="success-card hidden" aria-live="polite">
+        <h2>Patient Registered Successfully!</h2>
+        <p>Your patient's Health ID is:</p>
+        <h1 id="generatedPatientId"></h1>
+        <p id="generatedPatientName"></p>
+        <p class="health-note">
+            Save this ID so the patient can be found by the doctor and lab center.
+        </p>
+        <button type="button" id="registerAnotherButton" class="full">
+            Register Another Patient
+        </button>
+    </div>
+</section>
+
+</main>
+
+<script src="./data.js"></script>
+
+<script>
+function showMessage(id, message, isError = false) {
+    const element = document.getElementById(id);
+    element.textContent = message;
+    element.style.color = isError ? "#b42318" : "#147d78";
+}
+
+function loadDatabase() {
+    if (typeof loadDB !== "function") {
+        throw new Error("loadDB() was not found. Please check data.js.");
+    }
+
+    return loadDB();
+}
+
+function saveDatabase(db) {
+    if (typeof saveDB === "function") {
+        saveDB(db);
+        return;
+    }
+
+    const key = typeof STORAGE_KEY !== "undefined"
+        ? STORAGE_KEY
+        : "unifiedHealthPrototype_v1";
+
+    localStorage.setItem(key, JSON.stringify(db));
+}
+
+function getNextPatientId(db) {
+    const patients = db.patients || {};
+    let highest = 10000;
+
+    if (Array.isArray(patients)) {
+        patients.forEach(function(patient) {
+            const id = Number(patient.id);
+            if (Number.isFinite(id) && id > highest) highest = id;
+        });
+    } else {
+        Object.keys(patients).forEach(function(key) {
+            const id = Number(key);
+            if (Number.isFinite(id) && id > highest) highest = id;
+        });
+    }
+
+    return String(highest + 1);
+}
+
+function getPatientCount(patients) {
+    return Array.isArray(patients)
+        ? patients.length
+        : Object.keys(patients).length;
+}
+
+/* GOVERNMENT OFFICER LOGIN */
+
+document.getElementById("officerLoginForm")
+.addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const id = document.getElementById("officerId").value.trim();
+
+    if (id !== "GOV001") {
+        showMessage(
+            "loginMessage",
+            "Invalid Government Officer ID. Please try again.",
+            true
+        );
+        return;
+    }
+
+    showMessage("loginMessage", "", false);
+
+    document.getElementById("loginSection").classList.add("hidden");
+    document.getElementById("registrationSection").classList.remove("hidden");
+
+    window.scrollTo(0, 0);
+});
+
+/* SHOW / HIDE DISABILITY DETAILS */
+
+document.getElementById("disability")
+.addEventListener("change", function() {
+    const showDetails = this.value === "Yes";
+
+    document.getElementById("disabilityDetailsBox")
+        .classList.toggle("hidden", !showDetails);
+
+    if (!showDetails) {
+        document.getElementById("disabilityDetails").value = "";
+    }
+});
+
+/* REGISTER PATIENT */
+
+document.getElementById("registrationForm")
+.addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    showMessage("registrationMessage", "", false);
+
+    const patient = {
+        fullName: document.getElementById("fullName").value.trim(),
+        age: document.getElementById("age").value,
+        gender: document.getElementById("gender").value,
+        phone: document.getElementById("phone").value.trim(),
+        address: document.getElementById("address").value.trim(),
+        height: document.getElementById("height").value,
+        weight: document.getElementById("weight").value,
+        bloodGroup: document.getElementById("bloodGroup").value,
+        disability: document.getElementById("disability").value,
+        disabilityDetails: document.getElementById("disability").value === "Yes"
+            ? document.getElementById("disabilityDetails").value.trim()
+            : "",
+        allergies: document.getElementById("allergies").value.trim() || "None",
+        existingConditions: document.getElementById("existingConditions").value.trim() || "None",
+        prescriptions: [],
+        labReports: []
+    };
+
+    if (!patient.fullName) {
+        showMessage("registrationMessage", "Please enter the patient's full name.", true);
+        return;
+    }
+
+    try {
+        const db = loadDatabase();
+
+        if (!db.patients) {
+            db.patients = {};
+        }
+
+        const patientId = getNextPatientId(db);
+        patient.id = patientId;
+
+        if (Array.isArray(db.patients)) {
+            db.patients.push(patient);
+        } else {
+            db.patients[patientId] = patient;
+        }
+
+        saveDatabase(db);
+
+        document.getElementById("generatedPatientId").textContent = patientId;
+        document.getElementById("generatedPatientName").textContent =
+            "Patient: " + patient.fullName;
+
+        document.getElementById("successCard").classList.remove("hidden");
+        document.getElementById("registrationForm").classList.add("hidden");
+
+        window.scrollTo(0, 0);
+
+    } catch (error) {
+        showMessage(
+            "registrationMessage",
+            "Unable to register patient: " + error.message,
+            true
+        );
+    }
+});
+
+/* REGISTER ANOTHER PATIENT */
+
+document.getElementById("registerAnotherButton")
+.addEventListener("click", function() {
+    document.getElementById("registrationForm").reset();
+
+    document.getElementById("disabilityDetailsBox").classList.add("hidden");
+    document.getElementById("successCard").classList.add("hidden");
+    document.getElementById("registrationForm").classList.remove("hidden");
+
+    showMessage("registrationMessage", "", false);
+
+    window.scrollTo(0, 0);
+});
+
+/* LOGOUT */
+
+document.getElementById("logoutButton")
+.addEventListener("click", function() {
+    document.getElementById("officerLoginForm").reset();
+    document.getElementById("registrationForm").reset();
+
+    document.getElementById("successCard").classList.add("hidden");
+    document.getElementById("registrationForm").classList.remove("hidden");
+    document.getElementById("registrationSection").classList.add("hidden");
+    document.getElementById("loginSection").classList.remove("hidden");
+    document.getElementById("disabilityDetailsBox").classList.add("hidden");
+
+    showMessage("loginMessage", "", false);
+    showMessage("registrationMessage", "", false);
+
+    window.scrollTo(0, 0);
+});
+</script>
+
+</body>
+</html>
